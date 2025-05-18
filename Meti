@@ -1,0 +1,39 @@
+let input = '';
+
+process.stdin.on('data', chunk => input += chunk);
+process.stdin.on('end', () => {
+  const lines = input.trim().split('\n').map(line => line.trim());
+  const results = [];
+
+  const N = parseInt(lines.shift(), 10);
+  if (isNaN(N) || N < 1 || N > 100) {
+    console.log('-1');
+    return;
+  }
+
+  const processTestCases = (remainingLines, count, acc) => {
+    if (count === 0) {
+      console.log(acc.join('\n'));
+      return;
+    }
+    if (remainingLines.length < 2) {
+      acc.push('-1');
+      processTestCases([], count - 1, acc);
+      return;
+    }
+
+    const X = parseInt(remainingLines.shift(), 10);
+    const nums = remainingLines.shift().split(' ').map(Number);
+
+    if (isNaN(X) || X <= 0 || X > 100 || nums.length !== X) {
+      acc.push('-1');
+    } else {
+      const sum = nums.reduce((s, n) => n <= 0 ? s + Math.pow(n, 4) : s, 0);
+      acc.push(sum.toString());
+    }
+
+    processTestCases(remainingLines, count - 1, acc);
+  };
+
+  processTestCases(lines, N, results);
+});
